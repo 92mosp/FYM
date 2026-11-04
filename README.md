@@ -13,14 +13,6 @@ Test Michael Lugo Ospina para FYM: una REST API en ASP.NET Core con JWT, Swagger
 - GitHub Actions para CI, CodeQL, revisión de dependencias (`dependency review`), auditorías de NuGet y npm, Trivy y Gitleaks
 - Documentación de arquitectura, modelo ER, operaciones, API, contribución y seguridad
 
-## Docker
-
-1. Copia `.env.example` a `.env` y reemplaza cada marcador de posición (`placeholder`).
-2. Ejecuta `docker compose up --build`.
-3. Abre `http://localhost:5173`.
-4. La API está expuesta en `http://localhost:5080`.
-
-El Docker local utiliza cifrado SQL con una excepción de certificado de desarrollo de confianza. No copies `TrustServerCertificate=True` a producción.
 
 ## Local
 
@@ -58,6 +50,16 @@ npm run lint
 npm test
 npm run build
 ```
+
+## Docker
+
+1. Copia `.env.example` a `.env` y reemplaza cada marcador de posición (`placeholder`).
+2. Ejecuta `docker compose up --build`.
+3. Abre `http://localhost:5173`.
+4. La API está expuesta en `http://localhost:5080`.
+
+El Docker local utiliza cifrado SQL con una excepción de certificado de desarrollo de confianza. No copies `TrustServerCertificate=True` a producción.
+
 
 ## Documentación
 
