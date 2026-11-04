@@ -1,0 +1,31 @@
+## .NET Core / .NET 8
+[Bb]in/
+[Oo]bj/
+*.[Ll]og
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# Configuraciones de usuario y secretos
+**/appsettings.Development.json
+**/appsettings.Local.json
+.env
+.env.*
+!.env.example
+
+# Node.js / Frontend (React, Angular, Vue, etc.)
+node_modules/
+dist/
+build/
+.npm
+*.pid
+*.seed
+*.pid.lock
+
+# Entornos de desarrollo y editores
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
