@@ -4,6 +4,7 @@ using FYMTechnology.Api.Data;
 using FYMTechnology.Api.Domain;
 using FYMTechnology.Api.Services;
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace FYMTechnology.Api.Tests;
 
