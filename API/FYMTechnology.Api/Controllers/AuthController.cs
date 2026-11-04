@@ -6,7 +6,7 @@ namespace FYMTechnology.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public sealed class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(IAuthService authService) : ControllerBase
 {
     [HttpPost("login")]
     [ProducesResponseType<LoginResponse>(StatusCodes.Status200OK)]

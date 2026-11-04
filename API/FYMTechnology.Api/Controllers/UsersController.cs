@@ -8,7 +8,7 @@ namespace FYMTechnology.Api.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/users")]
-public sealed class UsersController(IUserService userService) : ControllerBase
+public class UsersController(IUserService userService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyCollection<UserResponse>>> GetAll(CancellationToken cancellationToken) =>

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FYMTechnology.Api.Tests;
 
-public sealed class UserServiceTests
+public class UserServiceTests
 {
     [Fact]
     public async Task CreateAsyncCreatesUserWithAssignedRole()

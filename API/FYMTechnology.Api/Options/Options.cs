@@ -1,6 +1,6 @@
 namespace FYMTechnology.Api.Options;
 
-public sealed class JwtOptions
+public class JwtOptions
 {
     public const string SectionName = "Jwt";
     public required string Key { get; init; }
@@ -9,7 +9,7 @@ public sealed class JwtOptions
     public int ExpiryMinutes { get; init; } = 30;
 }
 
-public sealed class SeedOptions
+public class SeedOptions
 {
     public const string SectionName = "Seed";
     public required string SuperAdminUsername { get; init; }

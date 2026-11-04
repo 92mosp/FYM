@@ -8,7 +8,7 @@ namespace FYMTechnology.Api.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/roles")]
-public sealed class RolesController(IRoleService roleService) : ControllerBase
+public class RolesController(IRoleService roleService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyCollection<RoleResponse>>> GetAll(CancellationToken cancellationToken) =>

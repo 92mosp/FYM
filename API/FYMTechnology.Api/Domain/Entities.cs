@@ -1,6 +1,6 @@
 namespace FYMTechnology.Api.Domain;
 
-public sealed class User
+public class User
 {
     public int Id { get; set; }
     public required string Username { get; set; }
@@ -10,7 +10,7 @@ public sealed class User
     public ICollection<UserRole> UserRoles { get; set; } = [];
 }
 
-public sealed class Role
+public class Role
 {
     public int Id { get; set; }
     public required string Name { get; set; }
@@ -18,7 +18,7 @@ public sealed class Role
     public ICollection<UserRole> UserRoles { get; set; } = [];
 }
 
-public sealed class UserRole
+public class UserRole
 {
     public int UserId { get; set; }
     public User User { get; set; } = null!;

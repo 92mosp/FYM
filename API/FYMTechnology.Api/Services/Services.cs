@@ -29,7 +29,7 @@ public interface IRoleService
     Task<IReadOnlyCollection<RoleResponse>> GetAllAsync(CancellationToken cancellationToken);
 }
 
-public sealed class AuthService(AppDbContext db, IOptions<JwtOptions> jwtOptions) : IAuthService
+public class AuthService(AppDbContext db, IOptions<JwtOptions> jwtOptions) : IAuthService
 {
     public async Task<LoginResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken)
     {
@@ -63,7 +63,7 @@ public sealed class AuthService(AppDbContext db, IOptions<JwtOptions> jwtOptions
     private static UserResponse Map(User user) => new(user.Id, user.Username, user.UserRoles.Select(x => x.Role.Name).Order().ToArray(), user.CreatedAtUtc);
 }
 
-public sealed class UserService(AppDbContext db) : IUserService
+public class UserService(AppDbContext db) : IUserService
 {
     public async Task<IReadOnlyCollection<UserResponse>> GetAllAsync(CancellationToken cancellationToken) =>
         await db.Users.AsNoTracking().Include(x => x.UserRoles).ThenInclude(x => x.Role).OrderBy(x => x.Username)
@@ -114,11 +114,11 @@ public sealed class UserService(AppDbContext db) : IUserService
     }
 }
 
-public sealed class RoleService(AppDbContext db) : IRoleService
+public class RoleService(AppDbContext db) : IRoleService
 {
     public async Task<IReadOnlyCollection<RoleResponse>> GetAllAsync(CancellationToken cancellationToken) =>
         await db.Roles.AsNoTracking().OrderBy(x => x.Name).Select(x => new RoleResponse(x.Id, x.Name)).ToArrayAsync(cancellationToken);
 }
 
-public sealed class ConflictException(string message) : Exception(message);
-public sealed class ValidationException(string message) : Exception(message);
+public class ConflictException(string message) : Exception(message);
+public class ValidationException(string message) : Exception(message);
