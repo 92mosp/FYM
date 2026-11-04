@@ -1,18 +1,18 @@
-# API reference
+# API
 
-Interactive Swagger documentation is available at `/swagger` in the Development environment.
+Swagger está disponible en `/swagger` en el entorno de desarrollo (`Development`).
 
 | Method | Path | Authorization | Purpose |
 |---|---|---|---|
-| POST | `/api/auth/login` | Anonymous | Authenticate and obtain a JWT |
-| GET | `/api/users` | Authenticated | List users and roles |
-| GET | `/api/users/{id}` | Authenticated | Get one user |
-| POST | `/api/users` | SuperAdmin | Create a user |
-| PUT | `/api/users/{id}/roles` | SuperAdmin | Replace assigned roles |
-| GET | `/api/roles` | Authenticated | List roles |
-| GET | `/health` | Anonymous | Health probe |
+| POST | `/api/auth/login` | Anonimo | Autenticar y obtener JWT |
+| GET | `/api/users` | Autenticado | Listar usuarios y roles |
+| GET | `/api/users/{id}` | Autenticado | Obtener un usuario |
+| POST | `/api/users` | SuperAdmin | Crear un usuario |
+| PUT | `/api/users/{id}/roles` | SuperAdmin | Cambiar rol |
+| GET | `/api/roles` | Autenticado | Listar roles |
+| GET | `/health` | Anonimo | Health check |
 
-## Login example
+## Ejemplo de login
 
 ```json
 {
@@ -21,4 +21,4 @@ Interactive Swagger documentation is available at `/swagger` in the Development 
 }
 ```
 
-Use the resulting token as `Authorization: Bearer <token>`.
+Usa el token resultante como `Authorization: Bearer <token>`.
