@@ -1,8 +1,8 @@
-# Operations
+# Operaciones
 
-## Configuration
+## Configuración
 
-Use environment variables with ASP.NET Core double-underscore notation:
+Usa variables de entorno con la notación de doble guion bajo de ASP.NET Core:
 
 - `ConnectionStrings__DefaultConnection`
 - `Jwt__Key`
@@ -12,12 +12,12 @@ Use environment variables with ASP.NET Core double-underscore notation:
 - `Seed__SuperAdminPassword`
 - `Cors__AllowedOrigins__0`
 
-The JWT key must contain at least 32 bytes. Rotate it through the target platform secret store. Changing a symmetric signing key invalidates existing tokens.
+La clave JWT debe contener al menos 32 bytes. Rotala a través del almacén de secretos (*secret store*) de la plataforma de destino. Cambiar una clave de firma simétrica invalida los tokens existentes.
 
-## Database
+## Base de datos
 
-The exercise uses `EnsureCreatedAsync` to keep first-run setup simple. Before evolving the schema in production, introduce EF Core migrations and execute them in a controlled deployment job rather than granting schema-change permissions to the runtime identity.
+El ejercicio utiliza `EnsureCreatedAsync` para mantener simple la configuración de la primera ejecución. Antes de evolucionar el esquema en producción, introduce migraciones de EF Core y ejecútalas en un trabajo de despliegue controlad (*deployment job*) en lugar de otorgar permisos de cambio de esquema a la identidad de ejecución (*runtime identity*).
 
-## Branch protection
+## Protección de ramas (`Branch protection`)
 
-Require pull requests, at least one approval, conversation resolution, signed commits where available, and the following checks: API CI, front-end CI, CodeQL, dependency review, Trivy, and Gitleaks. Enable GitHub secret scanning with push protection and private vulnerability reporting in repository settings.
+Requiere *pull requests*, al menos una aprobación, resolución de conversaciones, *commits* firmados cuando estén disponibles, y las siguientes comprobaciones: CI de la API, CI del *front-end*, CodeQL, *dependency review*, Trivy y Gitleaks. Habilita el *secret scanning* de GitHub con *push protection* y el reporte privado de vulnerabilidades en la configuración del repositorio.
