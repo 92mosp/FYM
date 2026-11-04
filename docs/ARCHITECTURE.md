@@ -1,34 +1,34 @@
-# Architecture
+# Arquitectura
 
-## Overview
+## Visión general (`Overview`)
 
-The solution is a React single-page application backed by an ASP.NET Core REST API and SQL Server. The API owns authentication, authorization, validation, persistence, and role assignment. The browser stores the short-lived access token in `sessionStorage`, reducing persistence across browser restarts while keeping the implementation simple.
+La solución es una aplicación *single-page* de React conectada a una REST API en ASP.NET Core y SQL Server. La API gestiona la autenticación, autorización, validación, persistencia y asignación de roles. El navegador almacena el *access token* de corta duración en `sessionStorage`, lo que reduce la persistencia entre reinicios del navegador al tiempo que mantiene una implementación sencilla.
 
 ```mermaid
 flowchart LR
-  Browser[React client] -->|HTTPS and JWT| API[ASP.NET Core API]
-  API -->|EF Core and encrypted SQL connection| DB[(SQL Server)]
-  API --> Health[Health endpoint]
-  GitHub[GitHub Actions] --> CI[Build, tests, lint, SAST, SCA, secrets]
+  Browser[Cliente React] -->|HTTPS y JWT| API[API ASP.NET Core]
+  API -->|EF Core y conexión SQL cifrada| DB[(SQL Server)]
+  API --> Health[Endpoint de Health]
+  GitHub[GitHub Actions] --> CI[Build, tests, lint, SAST, SCA, secretos]
 ```
 
-## API structure
+## Estructura de la API
 
-- `Controllers`: HTTP boundary and authorization policies.
-- `Contracts`: validated request and response models.
-- `Services`: business use cases and mapping.
-- `Domain`: user, role, and join entities.
-- `Data`: EF Core configuration and controlled seed logic.
-- `Middleware`: RFC 7807 errors and security headers.
+- `Controllers`: límite HTTP y políticas de autorización (`authorization policies`).
+- `Contracts`: modelos de solicitud (`request`) y respuesta (`response`) validados.
+- `Services`: casos de uso de negocio y mapeo.
+- `Domain`: entidades de usuario, rol y tablas de unión (`join entities`).
+- `Data`: configuración de EF Core y lógica controlada de *seed*.
+- `Middleware`: errores RFC 7807 y cabeceras de seguridad (`security headers`).
 
-This is deliberately a modular monolith. It keeps the exercise easy to run while preserving clear boundaries that can later be extracted if the domain grows.
+Se trata deliberadamente de un monolito modular (*modular monolith*). Mantiene el ejercicio fácil de ejecutar a la vez que preserva límites claros que se pueden extraer más adelante si el dominio crece.
 
-## Entity relationship model
+## Modelo entidad-relación (`Entity relationship model`)
 
 ```mermaid
 erDiagram
-  USER ||--o{ USER_ROLE : has
-  ROLE ||--o{ USER_ROLE : assigned
+  USER ||--o{ USER_ROLE : tiene
+  ROLE ||--o{ USER_ROLE : asignado
   USER {
     int Id PK
     string Username
@@ -47,15 +47,15 @@ erDiagram
   }
 ```
 
-## Security decisions
+## Decisiones de seguridad
 
-- Passwords use BCrypt cost factor 12.
-- JWT validates signature, issuer, audience, and lifetime with 30 seconds clock skew.
-- User creation and role assignment require `SuperAdmin`.
-- SQL Server connections require `Encrypt=True`. Local Docker uses `TrustServerCertificate=True` only because it has no trusted local CA.
-- CORS uses an explicit allowlist.
-- Global rate limiting provides a basic abuse control.
-- API errors use `ProblemDetails` and do not expose stack traces.
-- Production secrets are supplied through environment variables or a managed secret store.
+- Las contraseñas utilizan BCrypt con un *cost factor* de 12.
+- JWT valida la firma (*signature*), emisor (*issuer*), audiencia (*audience*) y tiempo de vida (*lifetime*) con una tolerancia de reloj (*clock skew*) de 30 segundos.
+- La creación de usuarios y la asignación de roles requieren `SuperAdmin`.
+- Las conexiones a SQL Server requieren `Encrypt=True`. El Docker local usa `TrustServerCertificate=True` únicamente porque no dispone de una CA local de confianza.
+- CORS utiliza una lista de permitidos explícita (*allowlist*).
+- El *rate limiting* global proporciona un control básico contra abusos.
+- Los errores de la API utilizan `ProblemDetails` y no exponen trazados de pila (*stack traces*).
+- Los secretos de producción se suministran mediante variables de entorno o un almacén de secretos gestionado (*managed secret store*).
 
-For a production deployment, prefer Azure Key Vault, Azure SQL with Microsoft Entra workload identity, managed TLS certificates, an API gateway or WAF, centralized audit logs, and refresh-token rotation or an external OpenID Connect provider.
+Para un despliegue en producción, se aconseja utilizar Azure Key Vault, Azure SQL con identidad de trabajo de Microsoft Entra (*workload identity*), certificados TLS gestionados, un *API gateway* o WAF, registros de auditoría centralizados (*centralized audit logs*) y rotación de *refresh tokens* o un proveedor externo de OpenID Connect.
