@@ -1,9 +1,9 @@
-# Contributing
+# Contribución (`Contributing`)
 
-1. Branch from `main` using `feature/<short-name>` or `fix/<short-name>`.
-2. Keep changes focused and include tests for behaviour changes.
-3. Run `dotnet format FYM.sln`, `dotnet test FYM.sln`, `npm run lint`, `npm test`, and `npm run build` before opening a pull request.
-4. Use a pull request and retain at least one approving review.
-5. Resolve all CI, CodeQL, dependency review, secret scan, and Trivy findings before merge.
+1. Crea una rama desde `main` utilizando la convención `feature/<short-name>` o `fix/<short-name>`.
+2. Mantén los cambios enfocados e incluye pruebas (*tests*) para los cambios de comportamiento.
+3. Ejecuta `dotnet format FYM.sln`, `dotnet test FYM.sln`, `npm run lint`, `npm test` y `npm run build` antes de abrir un *pull request*.
+4. Utiliza un *pull request* y requiere al menos una revisión aprobada.
+5. Resuelve todos los hallazgos de CI, CodeQL, *dependency review*, *secret scan* y Trivy antes de realizar el *merge*.
 
-Commits should be small, use an imperative subject, and avoid credentials or generated build output.
+Los *commits* deben ser pequeños, usar un asunto en imperativo y evitar credenciales o archivos generados por la compilación (*build output*).
