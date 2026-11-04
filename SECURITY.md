@@ -1,7 +1,7 @@
-# Security policy
+# Política de seguridad (`Security policy`)
 
-Report vulnerabilities privately through GitHub Security Advisories. Do not create public issues for suspected vulnerabilities.
+Reporta las vulnerabilidades de forma privada a través de los avisos de seguridad de GitHub (*GitHub Security Advisories*). No crees incidencias públicas (*public issues*) para vulnerabilidades sospechosas.
 
-Supported releases are the current `main` branch and the latest tagged release. Include reproduction steps, affected component, impact, and any suggested remediation. The team should acknowledge reports within two business days and establish a remediation target based on severity.
+Las versiones compatibles (*supported releases*) son la rama `main` actual y la última versión etiquetada (*tagged release*). Incluye los pasos de reproducción (*reproduction steps*), el componente afectado, el impacto y cualquier solución sugerida (*remediation*). El equipo debe acusar recibo de los reportes en un plazo de dos días hábiles y establecer un objetivo de resolución basado en la gravedad (*severity*).
 
-Secrets must be stored in GitHub Actions secrets or the deployment platform secret store. They must never be committed to the repository.
+Los secretos deben almacenarse en los secretos de GitHub Actions (*GitHub Actions secrets*) o en el almacén de secretos de la plataforma de despliegue (*deployment platform secret store*). Nunca deben incluirse en commits en el repositorio.
