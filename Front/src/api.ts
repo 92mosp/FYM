@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import type { ProblemDetails, Role, Session, User } from './types'
 
-const baseUrl = import.meta.env.VITE_API_URL ?? 'https://localhost:7080/api'
+const baseUrl = 'https://localhost:7080/api'
 const sessionSchema = z.object({ accessToken: z.string(), expiresAtUtc: z.string(), user: z.object({ id: z.number(), username: z.string(), roles: z.array(z.string()), createdAtUtc: z.string() }) })
 
 async function request<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {

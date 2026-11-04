@@ -66,9 +66,20 @@ public class AuthService(AppDbContext db, IOptions<JwtOptions> jwtOptions) : IAu
 public class UserService(AppDbContext db) : IUserService
 {
     public async Task<IReadOnlyCollection<UserResponse>> GetAllAsync(CancellationToken cancellationToken) =>
-        await db.Users.AsNoTracking().Include(x => x.UserRoles).ThenInclude(x => x.Role).OrderBy(x => x.Username)
-            .Select(x => new UserResponse(x.Id, x.Username, x.UserRoles.Select(r => r.Role.Name).Order().ToArray(), x.CreatedAtUtc))
-            .ToArrayAsync(cancellationToken);
+    await db.Users.AsNoTracking()
+        .Include(x => x.UserRoles)
+            .ThenInclude(x => x.Role)
+        .OrderBy(x => x.Username)
+        .Select(x => new UserResponse(
+            x.Id,
+            x.Username,
+            x.UserRoles
+                .OrderBy(r => r.Role.Name)
+                .Select(r => r.Role.Name)
+                .ToArray(),
+            x.CreatedAtUtc
+        ))
+        .ToArrayAsync(cancellationToken);
 
     public async Task<UserResponse?> GetByIdAsync(int id, CancellationToken cancellationToken) =>
         await db.Users.AsNoTracking().Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => x.Id == id)
@@ -82,7 +93,7 @@ public class UserService(AppDbContext db) : IUserService
         {
             throw new ConflictException("Username is already registered.");
         }
-        var roleIds = request.RoleIds.Distinct().ToArray();
+        var roleIds = new int[] { request.RoleId };
         var roles = await db.Roles.Where(x => roleIds.Contains(x.Id)).ToArrayAsync(cancellationToken);
         if (roles.Length != roleIds.Length)
         {

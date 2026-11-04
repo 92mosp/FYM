@@ -18,7 +18,7 @@ public class UserServiceTests
         await db.SaveChangesAsync();
         var service = new UserService(db);
 
-        var result = await service.CreateAsync(new CreateUserRequest("michael", "ExamplePassword123!", [1]), CancellationToken.None);
+        var result = await service.CreateAsync(new CreateUserRequest("michael", "ExamplePassword123!", 1), CancellationToken.None);
 
         result.Username.Should().Be("michael");
         result.Roles.Should().ContainSingle().Which.Should().Be("User");
@@ -34,7 +34,7 @@ public class UserServiceTests
         await db.SaveChangesAsync();
         var service = new UserService(db);
 
-        var action = () => service.CreateAsync(new CreateUserRequest("michael", "ExamplePassword123!", [1]), CancellationToken.None);
+        var action = () => service.CreateAsync(new CreateUserRequest("michael", "ExamplePassword123!", 1), CancellationToken.None);
 
         await action.Should().ThrowAsync<ConflictException>();
     }

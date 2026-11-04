@@ -91,7 +91,6 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 app.UseExceptionHandler();
-app.UseMiddleware<SecurityHeadersMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

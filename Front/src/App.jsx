@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://localhost:7080/api';
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
@@ -31,13 +31,13 @@ export default function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
       
-      setToken(data.token);
-      setUsername(data.username);
-      setRoles(data.roles);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('username', data.username);
-      localStorage.setItem('roles', JSON.stringify(data.roles));
-      fetchData(data.token);
+      setToken(data.accessToken);
+      setUsername(data.user.username);
+      setRoles(data.user.roles);
+      localStorage.setItem('token', data.accessToken);
+      localStorage.setItem('username', data.user.username);
+      localStorage.setItem('roles', JSON.stringify(data.user.roles));
+      fetchData(data.accessToken);
     } catch (err) {
       setError(err.message);
     }
@@ -75,13 +75,13 @@ export default function App() {
     setError('');
     setSuccessMsg('');
     try {
-      const res = await fetch(`${API_URL}/users/register`, {
+      const res = await fetch(`${API_URL}/users`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ username: newUsername, password: newPassword, roleId: Number(newRoleId) })
+        body: JSON.stringify({ username: newUsername, password: newPassword, roleId: parseInt(newRoleId) })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Registration failed');
