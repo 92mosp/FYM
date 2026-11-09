@@ -4,8 +4,16 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   test: {
+    globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
-    coverage: { provider: 'v8', reporter: ['text', 'lcov'], thresholds: { lines: 70, functions: 70, branches: 60, statements: 70 } }
-  }
+    env: { VITE_API_URL: 'http://api.test/api' },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/main.tsx', 'src/vite-env.d.ts', 'src/test/**', 'src/**/*.test.{ts,tsx}'],
+      thresholds: { lines: 80, functions: 80, branches: 70, statements: 80 },
+    },
+  },
 })

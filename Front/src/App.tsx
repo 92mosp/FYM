@@ -1,6 +1,6 @@
 import { DashboardPage } from './DashboardPage'
 import { LoginPage } from './LoginPage'
-import { useAuth } from './auth'
+import { useAuth } from './auth-context'
 
 export function App() {
   const { session } = useAuth()

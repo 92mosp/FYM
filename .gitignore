@@ -9,7 +9,7 @@
 .vs/
 
 # Configuraciones de usuario y secretos
-**/appsettings.Development.json
+
 **/appsettings.Local.json
 .env
 .env.*
@@ -29,3 +29,6 @@ build/
 .idea/
 *.DS_Store
 Thumbs.db
+# Test output
+coverage/
+TestResults/

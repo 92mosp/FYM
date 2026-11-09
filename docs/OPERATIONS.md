@@ -2,22 +2,31 @@
 
 ## Configuración
 
-Usa variables de entorno con la notación de doble guion bajo de ASP.NET Core:
+Toda la configuración se puede sobrescribir con variables de entorno o *App Settings* usando la notación de doble guion bajo de ASP.NET Core (`Jwt__Key` equivale a `Jwt:Key`). La lista completa, con su origen recomendado, está en [DEPLOYMENT.md](DEPLOYMENT.md#variables-y-secretos).
 
-- `ConnectionStrings__DefaultConnection`
-- `Jwt__Key`
-- `Jwt__Issuer`
-- `Jwt__Audience`
-- `Seed__SuperAdminUsername`
-- `Seed__SuperAdminPassword`
-- `Cors__AllowedOrigins__0`
+En local, los secretos (`Jwt:Key`, `Seed:*`) se guardan con `dotnet user-secrets`; ver el [README](../README.md#configuración-local).
 
-La clave JWT debe contener al menos 32 bytes. Rotala a través del almacén de secretos (*secret store*) de la plataforma de destino. Cambiar una clave de firma simétrica invalida los tokens existentes.
+La clave JWT debe tener al menos 32 bytes. Rótala desde el almacén de secretos; cambiar una clave de firma simétrica invalida los tokens emitidos.
+
+> La clave que estuvo versionada en `appsettings.json` en commits anteriores debe considerarse comprometida: no la uses en ningún entorno.
 
 ## Base de datos
 
-El ejercicio utiliza `EnsureCreatedAsync` para mantener simple la configuración de la primera ejecución. Antes de evolucionar el esquema en producción, introduce migraciones de EF Core y ejecútalas en un trabajo de despliegue controlad (*deployment job*) en lugar de otorgar permisos de cambio de esquema a la identidad de ejecución (*runtime identity*).
+El esquema se gestiona con migraciones de EF Core (`API/FYMTechnology.Api/Data/Migrations`).
 
-## Protección de ramas (`Branch protection`)
+- `Database:ApplyMigrationsOnStartup=true` (solo `Development`): la API aplica las migraciones al arrancar.
+- En producción vale `false`: el pipeline aplica las migraciones con un *migrations bundle* antes de desplegar la API (ver [DEPLOYMENT.md](DEPLOYMENT.md#migraciones)). Así la identidad de ejecución no necesita permisos de cambio de esquema.
 
-Requiere *pull requests*, al menos una aprobación, resolución de conversaciones, *commits* firmados cuando estén disponibles, y las siguientes comprobaciones: CI de la API, CI del *front-end*, CodeQL, *dependency review*, Trivy y Gitleaks. Habilita el *secret scanning* de GitHub con *push protection* y el reporte privado de vulnerabilidades en la configuración del repositorio.
+Al arrancar, la API crea los roles `SuperAdmin` y `User` y el SuperAdmin configurado si no existen. Es idempotente: ejecutarlo varias veces no duplica nada.
+
+## Health check
+
+`GET /health` es anónimo, no cuenta para el *rate limiting* y comprueba la conexión a la base de datos. Devuelve `200 Healthy` o `503 Unhealthy`.
+
+## Rate limiting
+
+- Global: 100 peticiones por minuto por IP (`RateLimiting:GlobalPermitLimit`).
+- Login: 5 intentos por minuto por IP (`RateLimiting:LoginPermitLimit`).
+- Ventana: `RateLimiting:WindowSeconds` (60).
+
+Detrás de un proxy, la IP del cliente solo es correcta si están activados los *forwarded headers* (ver [DEPLOYMENT.md](DEPLOYMENT.md#https-detrás-del-proxy-de-azure)).

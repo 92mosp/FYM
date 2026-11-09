@@ -10,25 +10,30 @@ public static class DatabaseInitializer
     public static async Task InitializeAsync(IServiceProvider services, IHostEnvironment environment)
     {
         await using var scope = services.CreateAsyncScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await db.Database.EnsureCreatedAsync();
+        var provider = scope.ServiceProvider;
+        var db = provider.GetRequiredService<AppDbContext>();
+        var logger = provider.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(DatabaseInitializer));
 
-        var superAdminRole = await db.Roles.SingleOrDefaultAsync(x => x.NormalizedName == "SUPERADMIN");
-        if (superAdminRole is null)
+        if (provider.GetRequiredService<IOptions<DatabaseOptions>>().Value.ApplyMigrationsOnStartup)
         {
-            superAdminRole = new Role { Name = "SuperAdmin", NormalizedName = "SUPERADMIN" };
-            db.Roles.Add(superAdminRole);
+            await db.Database.MigrateAsync();
         }
 
-        if (!await db.Roles.AnyAsync(x => x.NormalizedName == "USER"))
-        {
-            db.Roles.Add(new Role { Name = "User", NormalizedName = "USER" });
-        }
+        var superAdminRole = await EnsureRoleAsync(db, RoleNames.SuperAdmin);
+        await EnsureRoleAsync(db, RoleNames.User);
 
-        var seed = scope.ServiceProvider.GetRequiredService<IOptions<SeedOptions>>().Value;
-        if (!environment.IsDevelopment() && (string.IsNullOrWhiteSpace(seed.SuperAdminUsername) || string.IsNullOrWhiteSpace(seed.SuperAdminPassword)))
+        var seed = provider.GetRequiredService<IOptions<SeedOptions>>().Value;
+        if (string.IsNullOrWhiteSpace(seed.SuperAdminUsername) || string.IsNullOrWhiteSpace(seed.SuperAdminPassword))
         {
-            throw new InvalidOperationException("Production super administrator seed credentials are required.");
+            if (!environment.IsDevelopment())
+            {
+                throw new InvalidOperationException(
+                    "Seed:SuperAdminUsername and Seed:SuperAdminPassword are required. Set them as Seed__SuperAdminUsername and Seed__SuperAdminPassword app settings.");
+            }
+            logger.LogWarning(
+                "SuperAdmin seed skipped: set Seed:SuperAdminUsername and Seed:SuperAdminPassword with dotnet user-secrets to create it.");
+            await db.SaveChangesAsync();
+            return;
         }
 
         var normalizedUsername = seed.SuperAdminUsername.Trim().ToUpperInvariant();
@@ -50,5 +55,17 @@ public static class DatabaseInitializer
         }
 
         await db.SaveChangesAsync();
+    }
+
+    private static async Task<Role> EnsureRoleAsync(AppDbContext db, string name)
+    {
+        var normalized = name.ToUpperInvariant();
+        var role = await db.Roles.SingleOrDefaultAsync(x => x.NormalizedName == normalized);
+        if (role is null)
+        {
+            role = new Role { Name = name, NormalizedName = normalized };
+            db.Roles.Add(role);
+        }
+        return role;
     }
 }
